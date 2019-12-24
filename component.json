@@ -1,0 +1,25 @@
+{
+    "name": "model-messages",
+    "description": "model-messages component",
+    "scripts": [
+        "index.js",
+        "create/index.js",
+        "findone/index.js",
+        "remove/index.js",
+        "service/index.js"
+    ],
+    "styles": ["styles.css"],
+    "templates": [
+        "create/template.html",
+        "findone/template.html",
+        "find/template.html",
+        "remove/template.html"
+    ],
+    "main": "index.js",
+    "dependencies": {
+        "serandomps/serand": "master",
+        "serandomps/utils": "master",
+        "serandomps/dust": "master",
+        "serandomps/form": "master"
+    }
+}

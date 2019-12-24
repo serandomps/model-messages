@@ -1,0 +1,12 @@
+.model-messages-find .stretched-link {
+    text-decoration: none;
+}
+
+.model-messages-find .avatar {
+    width: 50px;
+    height: 50px;
+}
+
+.model-messages-find .ads {
+    height: 500px;
+}
