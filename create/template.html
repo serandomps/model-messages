@@ -7,7 +7,7 @@
         <div class="card-body">
             {/_.parent}
             {@blocks block="fixed" id=_.container name="about" value="Honda Vezel XL 2014" label="About" icon="fas fa-asterisk"/}
-            {@blocks block="select" id=_.container name="type" label="Type" title="Type" options=_.types search="true" size="10" icon="fas fa-tag"/}
+            {@blocks block="select" id=_.container name="type" label="Type" title="Type" options=_.types size="10" icon="fas fa-tag"/}
             {@blocks block="textarea" id=_.container name="body" help="Details" rows=10 value=body label="Details" icon="fas fa-align-left"/}
             {?_.parent}
         </div>
