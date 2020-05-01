@@ -4,6 +4,9 @@ var utils = require('utils');
 var serand = require('serand');
 var Message = require('../service');
 
+var Vehicles = require('model-vehicles').service;
+var RealEstates = require('model-realestates').service;
+
 dust.loadSource(dust.compile(require('./template.html'), 'model-messages-create'));
 
 var configs = function (options) {
@@ -116,74 +119,98 @@ var create = function (messagesForm, message, done) {
     });
 };
 
+var find = function (options, done) {
+  var model = options.model;
+  var about = options.about;
+
+  if (model === 'vehicles') {
+      return Vehicles.findOne({id: about}, done);
+  }
+
+  if (model === 'realestates') {
+      return RealEstates.findOne({id: about}, done);
+  }
+
+  done(new Error('Not supported'));
+};
+
 var render = function (ctx, container, options, data, done) {
-    utils.users(null, function (err, users) {
+    find(options, function (err, about) {
         if (err) {
             return done(err);
         }
-        var sandbox = container.sandbox;
-        var from = '/' + options.model + '/' + options.about;
-        data._ = data._ || {};
-        data._ = {
-            parent: container.parent
-        };
-        data.to = users.talk;
-        data.model = options.model;
-        data.about = options.about;
-        data._.types = [
-            {label: 'Bug', value: 'bug'},
-            {label: 'Enhancement', value: 'enhancement'},
-            {label: 'Invalid', value: 'invalid'},
-            {label: 'Violation', value: 'violation'},
-            {label: 'Other', value: 'other'}
-        ];
-        dust.render('model-messages-create', serand.pack(data, container), function (err, out) {
+        if (!about) {
+            return done(new Error('Not found'));
+        }
+        utils.users(null, function (err, users) {
             if (err) {
                 return done(err);
             }
-            var elem = sandbox.append(out);
-            var messagesForm = form.create(container.id, elem, configs(options));
-            ctx.form = messagesForm;
-            messagesForm.render(ctx, data, function (err) {
+            var sandbox = container.sandbox;
+            var from = '/' + options.model + '/' + options.about;
+            data._ = data._ || {};
+            data._ = {
+                parent: container.parent
+            };
+            data.to = users.talk;
+            data.model = options.model;
+            data.about = options.about;
+            data.title = about._.title;
+            data._.types = [
+                {label: 'Bug', value: 'bug'},
+                {label: 'Enhancement', value: 'enhancement'},
+                {label: 'Invalid', value: 'invalid'},
+                {label: 'Violation', value: 'violation'},
+                {label: 'Other', value: 'other'}
+            ];
+            dust.render('model-messages-create', serand.pack(data, container), function (err, out) {
                 if (err) {
                     return done(err);
                 }
-                if (container.parent) {
+                var elem = sandbox.append(out);
+                var messagesForm = form.create(container.id, elem, configs(options));
+                ctx.form = messagesForm;
+                messagesForm.render(ctx, data, function (err) {
+                    if (err) {
+                        return done(err);
+                    }
+                    if (container.parent) {
+                        done(null, {
+                            create: function (created) {
+                                create(messagesForm, data, function (err, data) {
+                                    if (err) {
+                                        return created(err);
+                                    }
+                                    created(null, null, data);
+                                });
+                            },
+                            form: messagesForm,
+                            clean: function () {
+                                $('.model-messages-create', sandbox).remove();
+                            }
+                        });
+                        return;
+                    }
+                    sandbox.on('click', '.create', function (e) {
+                        create(messagesForm, null, function (err, errors) {
+                            if (err) {
+                                return console.error(err);
+                            }
+                            if (errors) {
+                                return;
+                            }
+                            serand.redirect(options.location || from);
+                        });
+                    });
+                    sandbox.on('click', '.cancel', function (e) {
+                        serand.redirect(options.location || from);
+                    });
                     done(null, {
-                        create: function (created) {
-                            create(messagesForm, data, function (err, data) {
-                                if (err) {
-                                    return created(err);
-                                }
-                                created(null, null, data);
-                            });
-                        },
                         form: messagesForm,
                         clean: function () {
                             $('.model-messages-create', sandbox).remove();
                         }
                     });
-                    return;
-                }
-                sandbox.on('click', '.create', function (e) {
-                    create(messagesForm, null, function (err, errors) {
-                        if (err) {
-                            return console.error(err);
-                        }
-                        if (errors) {
-                            return;
-                        }
-                        serand.redirect(options.location || from);
-                    });
-                });
-                sandbox.on('click', '.cancel', function (e) {
-                    serand.redirect(options.location || from);
-                });
-                done(null, {
-                    form: messagesForm,
-                    clean: function () {
-                        $('.model-messages-create', sandbox).remove();
-                    }
                 });
             });
         });

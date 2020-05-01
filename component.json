@@ -20,6 +20,9 @@
         "serandomps/serand": "master",
         "serandomps/utils": "master",
         "serandomps/dust": "master",
-        "serandomps/form": "master"
+        "serandomps/form": "master",
+        "serandomps/user": "master",
+        "serandomps/model-vehicles": "master",
+        "serandomps/model-realestates": "master"
     }
 }

@@ -1,4 +1,12 @@
 <div class="model-messages">
-    <h1 class="message-title">{type}</h1>
+    <h1 class="message-title text-capitalize font-weight-bold">{type}</h1>
+    <div class="message-about mt-4 mb-4">
+        Reported against
+        {?url}
+        <a href="{url}" target="_blank" class="text-decoration-none ml-1">this</a>.
+        {:else}
+        the <strong>{model}</strong> with the id <strong>{about}</strong>
+        {/url}
+    </div>
     <div class="message-body">{body|s}</div>
 </div>

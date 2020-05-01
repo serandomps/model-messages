@@ -5,13 +5,13 @@
     <div class="card mb-3 mt-3 bg-light">
         <!--<div class="card-header">Contacts</div>-->
         <div class="card-body">
-            {/_.parent}
-            {@blocks block="fixed" id=_.container name="about" value="Honda Vezel XL 2014" label="About" icon="fas fa-asterisk"/}
+    {/_.parent}
+            {@blocks block="fixed" id=_.container name="about" value=title label="About" icon="fas fa-asterisk"/}
             {@blocks block="select" id=_.container name="type" label="Type" title="Type" options=_.types size="10" icon="fas fa-tag"/}
             {@blocks block="textarea" id=_.container name="body" help="Details" rows=10 value=body label="Details" icon="fas fa-align-left"/}
-            {?_.parent}
+    {?_.parent}
         </div>
-        {:else}
+    {:else}
         <button type="button" class="cancel btn btn-secondary font-weight-bold mr-2">
             <i class="fas fa-times-circle fa-fw mr-1"></i>Cancel
         </button>

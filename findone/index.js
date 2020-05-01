@@ -18,12 +18,23 @@ var findOne = function (id, done) {
     });
 };
 
+var aboutUrl = function (data) {
+    if (data.model === 'vehicles') {
+        return utils.resolve('autos:///vehicles/' + data.about);
+    }
+    if (data.model === 'realestates') {
+        return utils.resolve('realestates:///realestates/' + data.about);
+    }
+    return null;
+};
+
 module.exports = function (ctx, container, options, done) {
     findOne(options.id, function (err, data) {
         if (err) {
             return done(err);
         }
         var sandbox = container.sandbox;
+        data.url = aboutUrl(data);
         dust.render('model-messages-findone', serand.pack(data, container), function (err, out) {
             if (err) {
                 return done(err);
