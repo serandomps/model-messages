@@ -7,7 +7,7 @@ dust.loadSource(dust.compile(require('./template.html'), 'model-messages-findone
 var findOne = function (id, done) {
     $.ajax({
         method: 'GET',
-        url: utils.resolve('www:///apis/v/messages/' + id),
+        url: utils.resolve('apis:///v/messages/' + id),
         dataType: 'json',
         success: function (data) {
             done(null, data);
