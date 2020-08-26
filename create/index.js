@@ -126,14 +126,14 @@ var render = function (ctx, container, options, data, done) {
             return done(err);
         }
         var sandbox = container.sandbox;
-        var from = '/' + options.model + '/' + options.about;
+        var from = '/' + options.model + '/' + about.id;
         data._ = data._ || {};
         data._ = {
             parent: container.parent
         };
         data.to = users.talk;
         data.model = options.model;
-        data.about = options.about;
+        data.about = about.id;
         data.title = about._.title;
         data._.types = [
             {label: 'Bug', value: 'bug'},
